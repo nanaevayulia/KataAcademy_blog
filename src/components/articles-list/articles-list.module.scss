@@ -1,0 +1,16 @@
+@import '../../variables.scss';
+
+.articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    align-items: center;
+
+    &__items {
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        align-items: center;
+        width: 100%;
+    }
+}

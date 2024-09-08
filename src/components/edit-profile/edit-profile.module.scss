@@ -1,0 +1,40 @@
+@import '../../variables';
+@import '../../mixin.scss';
+
+.edit {
+    @include form;
+    width: 384px;
+    margin: 34px 0;
+    padding: 48px 36px;
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+        @include title;
+    }
+
+    &__form {
+        margin-bottom: 8px;
+    }
+}
+
+.label__input {
+    @include label__input;
+    margin-top: 12px;
+}
+
+.input {
+    @include input;
+}
+
+label:first-of-type {
+    margin-bottom: 0;
+}
+
+.btn__submit {
+    @include button-submit;
+}
+
+.error_message {
+    @include error_message;
+}

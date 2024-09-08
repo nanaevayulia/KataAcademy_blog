@@ -1,0 +1,36 @@
+@import '../../variables';
+@import '../../mixin.scss';
+
+.new-article {
+    @include form;
+    width: 938px;
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+        @include title;
+    }
+}
+
+.label__input {
+    @include label__input;
+    margin-top: 21px;
+}
+
+.input {
+    @include input;
+}
+
+label:first-of-type {
+    margin-top: 0;
+}
+
+.btn {
+    @include button-submit;
+    margin-top: 21px;
+}
+
+.error_message {
+    @include error_message;
+}

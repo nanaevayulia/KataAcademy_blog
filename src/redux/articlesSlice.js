@@ -2,13 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const _baseURL = 'https://blog.kata.academy/api/';
 
-let articlesObj = [];
+let articlesObj = null;
 let articleObj = null;
 
 export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (page = 1) => {
   try {
     const url = `${_baseURL}articles?limit=5&offset=${(page - 1) * 5}`;
-    const response = await fetch(url);
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, received ${response.status}`);
@@ -24,7 +30,13 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
 export const fetchArticle = createAsyncThunk('articles/fetchArticle', async (slug, { rejectWithValue }) => {
   try {
     const url = `${_baseURL}articles/${slug}`;
-    const response = await fetch(url);
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}, received ${response.status}`);
@@ -45,6 +57,7 @@ const articlesSlice = createSlice({
     loading: false,
     error: false,
   },
+
   extraReducers: (builder) => {
     builder.addCase(fetchArticles.pending, (state) => {
       state.loading = true;

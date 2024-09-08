@@ -5,12 +5,18 @@ import { Link } from 'react-router-dom';
 import getTrimText from '../../utils';
 import heartNull from '../UI/heart_null.svg';
 import heartRed from '../UI/heart_red.svg';
-import avatar from '../UI/avatar.svg';
 
 import style from './article-item.module.scss';
 
 const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, favorited, author, slug }) => {
   const { username, image } = author;
+
+  let userAvatar = '';
+  if (image === undefined) {
+    userAvatar = 'https://static.productionready.io/images/smiley-cyrus.jpg';
+  } else {
+    userAvatar = image;
+  }
 
   const filterTags = tagList && tagList.map((item) => getTrimText(item)).filter((item) => item || Math.abs(0));
   const tags = filterTags && (
@@ -47,7 +53,7 @@ const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, f
           <p className={style['article__userName']}>{username || 'Anonymous>'}</p>
           <p className={style['article__date']}>{format(createdAt || Date.now(), 'MMMM d, yyyy')}</p>
         </div>
-        <img className={style['article__avatar']} src={image || avatar} alt="avatar" />
+        <img className={style['article__avatar']} src={userAvatar} alt="avatar" />
       </div>
     </li>
   );

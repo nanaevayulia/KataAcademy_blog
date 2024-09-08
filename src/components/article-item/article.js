@@ -10,7 +10,6 @@ import { fetchArticle } from '../../redux/articlesSlice';
 import getTrimText from '../../utils';
 import heartNull from '../UI/heart_null.svg';
 import heartRed from '../UI/heart_red.svg';
-import avatar from '../UI/avatar.svg';
 import NotFound from '../not-found';
 
 import style from './article-item.module.scss';
@@ -42,7 +41,13 @@ const Article = () => {
   const favoritesCount = article?.favoritesCount;
   const favorited = article?.favorited;
   const username = author?.username;
-  const image = author?.image;
+
+  let userAvatar = '';
+  if (author?.image === undefined) {
+    userAvatar = 'https://static.productionready.io/images/smiley-cyrus.jpg';
+  } else {
+    userAvatar = author?.image;
+  }
 
   const filterTags = tagList?.map((item) => getTrimText(item)).filter((item) => item || Math.abs(0));
   const tags = filterTags && (
@@ -95,7 +100,7 @@ const Article = () => {
             <p className={style['article__userName']}>{deleteSpaces(username) || 'Anonymous>'}</p>
             <p className={style['article__date']}>{format(createdAt || Date.now(), 'MMMM d, yyyy')}</p>
           </div>
-          <img className={style['article__avatar']} src={image || avatar} alt="avatar" />
+          <img className={style['article__avatar']} src={userAvatar} alt="avatar" />
         </div>
         <div className={style['article__text']}>{<Markdown>{body}</Markdown>}</div>
       </article>

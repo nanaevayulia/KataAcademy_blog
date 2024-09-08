@@ -1,0 +1,74 @@
+@import '../../variables';
+@import '../../mixin.scss';
+
+.signUp {
+    @include form;
+    width: 384px;
+    margin: 34px 0;
+    padding: 48px 36px;
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+        @include title;
+    }
+
+    &__form {
+        margin-bottom: 8px;
+    }
+
+    &__have-an-account {
+        display: flex;
+        justify-content: center;
+        line-height: 20px;
+        color: rgba(140, 140, 140);
+    }
+
+    &__link {
+        color: $blue-color;
+    }
+}
+
+.label__input {
+    @include label__input;
+    margin-top: 12px;
+}
+
+.input {
+    @include input;
+}
+
+label:first-of-type {
+    margin-top: 0;
+}
+
+.btn__submit {
+    @include button-submit;
+}
+
+.checkbox__container {
+    font-size: 14px;
+    padding-top: 8px;
+    border-top: 1px solid $light-gray-color;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 8px;
+    align-items: flex-start;
+    margin-top: 21px;
+}
+
+.checkbox {
+    position: relative;
+    top: 5px;
+    accent-color: $blue-color;
+    cursor: pointer;
+}
+
+.error_message {
+    @include error_message;
+
+    &_checkbox {
+        @include error_message;
+        grid-column: 2/3;
+    }
+}

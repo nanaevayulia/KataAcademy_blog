@@ -1,10 +1,9 @@
 @import '../../variables.scss';
+@import '../../mixin.scss';
 
 .article {
+    @include form;
     width: 100%;
-    background-color: $white-color;
-    border-radius: $border-radius-form;
-    box-shadow: $shadow;
     display: grid;
     grid-template-columns: 1fr auto;
     padding: 15px;
@@ -49,10 +48,7 @@
     }
 
     &__avatar {
-        border-radius: 50px;
-        width: 46px;
-        height: 46px;
-        object-fit: cover;
+       @include avatar;
     }
 
     &__description {

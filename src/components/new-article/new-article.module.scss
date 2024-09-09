@@ -26,9 +26,28 @@ label:first-of-type {
     margin-top: 0;
 }
 
+.form__wrapper {
+    display: grid;
+    grid-template-columns: 300px auto auto;
+    gap: 17px;
+    justify-content: left;
+    margin-bottom: 5px;
+}
+
 .btn {
-    @include button-submit;
-    margin-top: 21px;
+    &__submit {
+        @include button_submit;
+        margin-top: 21px;
+        width: 317px;
+    }
+    
+    &__delete {
+        @include button_delete;
+    }
+
+    &__add-tag {
+        @include button_add-tag;
+    }
 }
 
 .error_message {

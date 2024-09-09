@@ -1,9 +1,9 @@
-import { Tag, Spin, Alert } from 'antd';
+import { Tag, Spin, Alert, Popconfirm } from 'antd';
 import { format } from 'date-fns';
 import Markdown from 'markdown-to-jsx';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { appSelectors } from '../../redux';
 import { fetchArticle } from '../../redux/articlesSlice';
@@ -21,10 +21,17 @@ const Article = () => {
   }
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const user = useSelector(appSelectors.userObj);
+  const token = user?.token ?? localStorage.getItem('token');
 
   useEffect(() => {
     dispatch(fetchArticle(slug));
   }, [dispatch, slug]);
+
+  const fromPage = location.state?.from?.pathname || -1;
 
   const articles = useSelector(appSelectors.articles);
   const loading = useSelector(appSelectors.loading);
@@ -49,6 +56,8 @@ const Article = () => {
     userAvatar = author?.image;
   }
 
+  const postOfUser = localStorage.getItem('username') === username;
+
   const filterTags = tagList?.map((item) => getTrimText(item)).filter((item) => item || Math.abs(0));
   const tags = filterTags && (
     <div className={style['article__tags']}>
@@ -66,6 +75,16 @@ const Article = () => {
     return null;
   };
 
+  const confirm = () => {
+    fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    navigate(fromPage, { replace: true });
+  };
+
   const spinner = loading && <Spin size="large" />;
 
   const errorMessage =
@@ -74,37 +93,61 @@ const Article = () => {
     ) : null;
 
   return (
-    <>
+    <div className={style.container}>
       {spinner}
       {errorMessage}
-      <article className={style.article}>
-        <div className={style.articleInfo}>
-          <div>
-            <span className={style['article__title']}>{deleteSpaces(title) || 'No title'}</span>
-            <div className={style['article__like']}>
-              <input
-                className={style['article__heart']}
-                type="image"
-                src={favorited ? heartRed : heartNull}
-                alt="heart"
-                disabled
-              ></input>
-              <span className={style['article__heart-count']}>{favoritesCount}</span>
+      {!error && !loading ? (
+        <article className={style.article}>
+          <div className={style['article__left']}>
+            <div>
+              <span className={style['article__title']}>{deleteSpaces(title) || 'No title'}</span>
+              <div className={style['article__like']}>
+                <input
+                  className={style['article__heart']}
+                  type="image"
+                  src={favorited ? heartRed : heartNull}
+                  alt="heart"
+                  disabled
+                ></input>
+                <span className={style['article__heart-count']}>{favoritesCount}</span>
+              </div>
             </div>
+            {tags}
+            <p className={style['article__description']}>{deleteSpaces(description) || 'No description'}</p>
           </div>
-          {tags}
-          <p className={style['article__description']}>{deleteSpaces(description) || 'No description'}</p>
-        </div>
-        <div className={style.userInfo}>
-          <div>
-            <p className={style['article__userName']}>{deleteSpaces(username) || 'Anonymous>'}</p>
-            <p className={style['article__date']}>{format(createdAt || Date.now(), 'MMMM d, yyyy')}</p>
+          <div className={style['article__right']}>
+            <div className={style.userInfo}>
+              <div>
+                <p className={style['article__userName']}>{deleteSpaces(username) || 'Anonymous>'}</p>
+                <p className={style['article__date']}>{format(createdAt || Date.now(), 'MMMM d, yyyy')}</p>
+              </div>
+              <img className={style['article__avatar']} src={userAvatar} alt="avatar" />
+            </div>
+            {postOfUser && (
+              <div className={style['article__buttons']}>
+                <Popconfirm
+                  description="Are you sure to delete this article?"
+                  okText="Yes"
+                  cancelText="No"
+                  placement="rightTop"
+                  style={{ width: '246px' }}
+                  onConfirm={confirm}
+                >
+                  <button className={style['btn__delete']} disabled={loading}>
+                    Delete
+                  </button>
+                </Popconfirm>
+
+                <Link to={`/articles/${slug}/edit`} className={style['btn__edit']} disabled={loading}>
+                  Edit
+                </Link>
+              </div>
+            )}
           </div>
-          <img className={style['article__avatar']} src={userAvatar} alt="avatar" />
-        </div>
-        <div className={style['article__text']}>{<Markdown>{body}</Markdown>}</div>
-      </article>
-    </>
+          <div className={style['article__text']}>{<Markdown>{body}</Markdown>}</div>
+        </article>
+      ) : null}
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
@@ -10,8 +10,13 @@ import style from './signIn.module.scss';
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { token, loading, error, username } = useSelector(appSelectors.userObj);
 
-  const { token, loading, error } = useSelector(appSelectors.userObj);
+  const fromPage = location.state?.from?.pathname || '/';
+  if (username) {
+    navigate(fromPage, { replace: true });
+  }
 
   const {
     register,
@@ -62,11 +67,11 @@ const SignIn = () => {
           style={errors.email || error ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.email ? (
+        {errors.email && (
           <div className={style['error_message']}>
             <p> {errors?.email?.message}</p>
           </div>
-        ) : null}
+        )}
 
         <label className={style['label__input']} htmlFor="password">
           Password
@@ -83,11 +88,11 @@ const SignIn = () => {
           style={errors.password || error ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.password ? (
+        {errors.password && (
           <div className={style['error_message']}>
             <p> {errors?.password?.message}</p>
           </div>
-        ) : null}
+        )}
 
         <button className={style['btn__submit']} disabled={loading}>
           Login

@@ -11,7 +11,7 @@ import style from './article-item.module.scss';
 const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, favorited, author, slug }) => {
   const { username, image } = author;
 
-  let userAvatar = '';
+  let userAvatar;
   if (image === undefined) {
     userAvatar = 'https://static.productionready.io/images/smiley-cyrus.jpg';
   } else {
@@ -29,7 +29,7 @@ const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, f
 
   return (
     <li className={style.article}>
-      <div className={style.articleInfo}>
+      <div className={style['article__left']}>
         <div>
           <Link to={`/articles/${slug}`} className={style['article__title']}>
             {getTrimText(title, 50) || 'No title'}

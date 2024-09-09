@@ -71,11 +71,11 @@ const EditProfile = () => {
           style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.username ? (
+        {errors.username && (
           <div className={style['error_message']}>
             <p>{errors.username.message}</p>
           </div>
-        ) : null}
+        )}
 
         <label className={style['label__input']} htmlFor="email">
           Email address
@@ -96,11 +96,11 @@ const EditProfile = () => {
           style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.email ? (
+        {errors.email && (
           <div className={style['error_message']}>
             <p>{errors.email.message}</p>
           </div>
-        ) : null}
+        )}
 
         <label className={style['label__input']} htmlFor="new-password">
           New password
@@ -125,11 +125,11 @@ const EditProfile = () => {
           style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.password ? (
+        {errors.password && (
           <div className={style['error_message']}>
             <p>{errors.password.message}</p>
           </div>
-        ) : null}
+        )}
 
         <label className={style['label__input']} htmlFor="avatar">
           Avatar image (url)
@@ -149,11 +149,11 @@ const EditProfile = () => {
           style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.avatar ? (
+        {errors.avatar && (
           <div className={style['error_message']}>
             <p>{errors.avatar.message}</p>
           </div>
-        ) : null}
+        )}
 
         <button className={style['btn__submit']} type="submit">
           Save

@@ -43,7 +43,8 @@ label:first-of-type {
 }
 
 .btn__submit {
-    @include button-submit;
+    @include button_submit;
+    margin-top: 21px;
 }
 
 .checkbox__container {

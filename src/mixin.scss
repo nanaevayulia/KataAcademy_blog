@@ -42,7 +42,7 @@
     }
 }
 
-@mixin button-submit {
+@mixin button_submit {
     background-color: $blue-color;
     color: $white-color;
     font-size: 16px;
@@ -52,7 +52,32 @@
     display: flex;
     justify-content: center;
     border-radius: $border-radius-input;
-    margin-top: 21px;
+}
+
+@mixin button_delete {
+    color: $red-color;
+    border: 1px solid $red-color;
+    border-radius: $border-radius-input;
+    padding: 8px 36px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+@mixin button_add-tag {
+    color: $blue-color;
+    border: 1px solid $blue-color;
+    border-radius: $border-radius-input;
+    padding: 8px 40px;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+@mixin button_edit {
+    color: $green-color;
+    border: 1px solid $green-color;
+    border-radius: $border-radius-input;
+    padding: 6px 19px;
+    font-size: 14px;
 }
 
 @mixin error_message {

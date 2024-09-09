@@ -5,7 +5,7 @@ const _baseURL = 'https://blog.kata.academy/api/';
 let articlesObj = null;
 let articleObj = null;
 
-export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (page = 1) => {
+export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (page = 1, { rejectWithValue }) => {
   try {
     const url = `${_baseURL}articles?limit=5&offset=${(page - 1) * 5}`;
     const token = localStorage.getItem('token');
@@ -21,10 +21,10 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
     }
 
     articlesObj = await response.json();
-    return articlesObj;
   } catch (err) {
-    console.log(err.message);
+    return rejectWithValue(err.message);
   }
+  return articlesObj;
 });
 
 export const fetchArticle = createAsyncThunk('articles/fetchArticle', async (slug, { rejectWithValue }) => {
@@ -48,6 +48,59 @@ export const fetchArticle = createAsyncThunk('articles/fetchArticle', async (slu
   }
   return articleObj.article;
 });
+
+export const fetchCreateArticle = createAsyncThunk('articles/fetchCreateArticle', async (data, { rejectWithValue }) => {
+  try {
+    const url = `${_baseURL}articles`;
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Could not fetch ${url}, received ${response.status}`);
+    }
+
+    articleObj = await response.json();
+  } catch (err) {
+    return rejectWithValue(err.message);
+  }
+  return articleObj.article;
+});
+
+export const fetchEditArticle = createAsyncThunk(
+  'articles/fetchEditArticle',
+  async ([slug, data], { rejectWithValue }) => {
+    try {
+      const url = `${_baseURL}articles/${slug}`;
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: data,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Could not fetch ${url}, received ${response.status}`);
+      }
+
+      articleObj = await response.json();
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+    return articleObj.article;
+  }
+);
 
 const articlesSlice = createSlice({
   name: 'articles',
@@ -89,6 +142,30 @@ const articlesSlice = createSlice({
         state.articles[index] = { ...action.payload };
       }
       state.articles[0] = { ...action.payload };
+    });
+
+    builder.addCase(fetchCreateArticle.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+
+    builder.addCase(fetchCreateArticle.fulfilled, (state, action) => {
+      state.loading = false;
+      const { slug } = action.payload;
+      const index = state.articles.findIndex((article) => article.slug === slug);
+      state.articles[index] = { ...action.payload };
+    });
+
+    builder.addCase(fetchEditArticle.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+
+    builder.addCase(fetchEditArticle.fulfilled, (state, action) => {
+      state.loading = false;
+      const { slug } = action.payload;
+      const index = state.articles.findIndex((article) => article.slug === slug);
+      state.articles[index] = { ...action.payload };
     });
   },
 });

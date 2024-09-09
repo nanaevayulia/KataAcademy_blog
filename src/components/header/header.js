@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchUserLogOut } from '../../redux/userSlice';
+import { fetchUserLogOut } from '../../api/api_user';
 import { appSelectors } from '../../redux';
 
 import style from './header.module.scss';
 
-const Header = () => {
+export default function Header() {
   const dispatch = useDispatch();
 
   const user = useSelector(appSelectors.userObj);
@@ -60,6 +60,4 @@ const Header = () => {
       )}
     </header>
   );
-};
-
-export default Header;
+}

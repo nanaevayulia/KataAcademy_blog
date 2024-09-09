@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Spin, Pagination, Alert } from 'antd';
 
-import { fetchArticles } from '../../redux/articlesSlice';
+import { fetchArticles } from '../../api/api_articles';
 import { appSelectors } from '../../redux';
 import { ArticleItem } from '../article-item';
 
 import style from './articles-list.module.scss';
 
-const ArticlesList = () => {
+export default function ArticlesList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -62,6 +62,4 @@ const ArticlesList = () => {
       {elems}
     </div>
   );
-};
-
-export default ArticlesList;
+}

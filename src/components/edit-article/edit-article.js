@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import NewArticle from '../new-article/new-article';
 import { appSelectors } from '../../redux';
-import { fetchArticle } from '../../redux/articlesSlice';
+import { fetchArticle } from '../../api/api_articles';
 
 export default function EditArticle() {
   const { slug } = useParams;

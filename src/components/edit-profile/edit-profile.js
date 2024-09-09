@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import { fetchUserEdit } from '../../redux/userSlice';
+import { fetchUserEdit } from '../../api/api_user';
 
 import style from './edit-profile.module.scss';
 
-const EditProfile = () => {
+export default function EditProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -161,6 +161,4 @@ const EditProfile = () => {
       </form>
     </div>
   );
-};
-
-export default EditProfile;
+}

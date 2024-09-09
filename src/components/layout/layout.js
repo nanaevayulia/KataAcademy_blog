@@ -4,7 +4,7 @@ import Header from '../header';
 
 import style from './layout.module.scss';
 
-const Layout = () => {
+export default function Layout() {
   return (
     <>
       <Header />
@@ -13,6 +13,4 @@ const Layout = () => {
       </div>
     </>
   );
-};
-
-export default Layout;
+}

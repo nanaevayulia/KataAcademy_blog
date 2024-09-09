@@ -6,15 +6,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { appSelectors } from '../../redux';
-import { fetchArticle } from '../../redux/articlesSlice';
+import { fetchSetLike, fetchDeleteLike, fetchArticle } from '../../api/api_articles';
 import getTrimText from '../../utils';
-import heartNull from '../UI/heart_null.svg';
-import heartRed from '../UI/heart_red.svg';
+import heartNull from '../../images/heart_null.svg';
+import heartRed from '../../images/heart_red.svg';
 import NotFound from '../not-found';
 
 import style from './article-item.module.scss';
 
-const Article = () => {
+export default function Article() {
   const { slug } = useParams();
   if (!slug) {
     return <NotFound />;
@@ -85,6 +85,16 @@ const Article = () => {
     navigate(fromPage, { replace: true });
   };
 
+  const toggleLikeClick = () => {
+    if (token) {
+      if (!favorited) {
+        dispatch(fetchSetLike(slug));
+      } else {
+        dispatch(fetchDeleteLike(slug));
+      }
+    }
+  };
+
   const spinner = loading && <Spin size="large" />;
 
   const errorMessage =
@@ -107,7 +117,8 @@ const Article = () => {
                   type="image"
                   src={favorited ? heartRed : heartNull}
                   alt="heart"
-                  disabled
+                  disabled={!token}
+                  onClick={toggleLikeClick}
                 ></input>
                 <span className={style['article__heart-count']}>{favoritesCount}</span>
               </div>
@@ -149,6 +160,4 @@ const Article = () => {
       ) : null}
     </div>
   );
-};
-
-export default Article;
+}

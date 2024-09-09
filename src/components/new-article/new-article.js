@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useRef, useState } from 'react';
 
 import { appSelectors } from '../../redux';
-import { fetchCreateArticle, fetchEditArticle } from '../../redux/articlesSlice';
+import { fetchCreateArticle, fetchEditArticle } from '../../api/api_articles';
 
 import style from './new-article.module.scss';
 

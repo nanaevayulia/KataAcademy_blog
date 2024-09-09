@@ -11,7 +11,7 @@ import EditArticle from '../edit-article';
 import Authorization from '../../hoc/authorization';
 import NotFound from '../not-found';
 
-const App = () => {
+export default function App() {
   return (
     <div>
       <Routes>
@@ -43,6 +43,4 @@ const App = () => {
       </Routes>
     </div>
   );
-};
-
-export default App;
+}

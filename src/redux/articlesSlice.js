@@ -1,106 +1,13 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-const _baseURL = 'https://blog.kata.academy/api/';
-
-let articlesObj = null;
-let articleObj = null;
-
-export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (page = 1, { rejectWithValue }) => {
-  try {
-    const url = `${_baseURL}articles?limit=5&offset=${(page - 1) * 5}`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
-    articlesObj = await response.json();
-  } catch (err) {
-    return rejectWithValue(err.message);
-  }
-  return articlesObj;
-});
-
-export const fetchArticle = createAsyncThunk('articles/fetchArticle', async (slug, { rejectWithValue }) => {
-  try {
-    const url = `${_baseURL}articles/${slug}`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
-    articleObj = await response.json();
-  } catch (err) {
-    return rejectWithValue(err.message);
-  }
-  return articleObj.article;
-});
-
-export const fetchCreateArticle = createAsyncThunk('articles/fetchCreateArticle', async (data, { rejectWithValue }) => {
-  try {
-    const url = `${_baseURL}articles`;
-    const token = localStorage.getItem('token');
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: data,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
-    articleObj = await response.json();
-  } catch (err) {
-    return rejectWithValue(err.message);
-  }
-  return articleObj.article;
-});
-
-export const fetchEditArticle = createAsyncThunk(
-  'articles/fetchEditArticle',
-  async ([slug, data], { rejectWithValue }) => {
-    try {
-      const url = `${_baseURL}articles/${slug}`;
-      const token = localStorage.getItem('token');
-
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: data,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Could not fetch ${url}, received ${response.status}`);
-      }
-
-      articleObj = await response.json();
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-    return articleObj.article;
-  }
-);
+import {
+  fetchArticles,
+  fetchArticle,
+  fetchCreateArticle,
+  fetchEditArticle,
+  fetchSetLike,
+  fetchDeleteLike,
+} from '../api/api_articles';
 
 const articlesSlice = createSlice({
   name: 'articles',
@@ -166,6 +73,34 @@ const articlesSlice = createSlice({
       const { slug } = action.payload;
       const index = state.articles.findIndex((article) => article.slug === slug);
       state.articles[index] = { ...action.payload };
+    });
+
+    builder.addCase(fetchSetLike.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+
+    builder.addCase(fetchSetLike.fulfilled, (state, action) => {
+      state.loading = false;
+      const { slug, favorited, favoritesCount } = action.payload;
+
+      const index = state.articles.findIndex((article) => article.slug === slug);
+      state.articles[index].favorited = favorited;
+      state.articles[index].favoritesCount = favoritesCount;
+    });
+
+    builder.addCase(fetchDeleteLike.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+
+    builder.addCase(fetchDeleteLike.fulfilled, (state, action) => {
+      state.loading = false;
+      const { slug, favorited, favoritesCount } = action.payload;
+
+      const index = state.articles.findIndex((article) => article.slug === slug);
+      state.articles[index].favorited = favorited;
+      state.articles[index].favoritesCount = favoritesCount;
     });
   },
 });

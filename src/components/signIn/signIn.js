@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
 import { appSelectors } from '../../redux';
-import { fetchUserSignIn } from '../../redux/userSlice';
+import { fetchUserSignIn } from '../../api/api_user';
 
 import style from './signIn.module.scss';
 
-const SignIn = () => {
+export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,6 +107,4 @@ const SignIn = () => {
       </span>
     </div>
   );
-};
-
-export default SignIn;
+}

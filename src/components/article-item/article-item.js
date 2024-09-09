@@ -1,15 +1,33 @@
 import { Tag } from 'antd';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { fetchSetLike, fetchDeleteLike } from '../../api/api_articles';
 import getTrimText from '../../utils';
-import heartNull from '../UI/heart_null.svg';
-import heartRed from '../UI/heart_red.svg';
+import heartNull from '../../images/heart_null.svg';
+import heartRed from '../../images/heart_red.svg';
+import { appSelectors } from '../../redux';
 
 import style from './article-item.module.scss';
 
-const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, favorited, author, slug }) => {
-  const { username, image } = author;
+export default function ArticleItem({
+  title,
+  description,
+  tagList,
+  createdAt,
+  favoritesCount,
+  favorited,
+  author,
+  slug,
+}) {
+  const dispatch = useDispatch();
+  const user = useSelector(appSelectors.userObj);
+
+  const token = user.token ?? localStorage.getItem('token');
+
+  const username = author?.username;
+  const image = author?.image;
 
   let userAvatar;
   if (image === undefined) {
@@ -27,6 +45,16 @@ const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, f
     </div>
   );
 
+  const toggleLikeClick = () => {
+    if (token) {
+      if (!favorited) {
+        dispatch(fetchSetLike(slug));
+      } else {
+        dispatch(fetchDeleteLike(slug));
+      }
+    }
+  };
+
   return (
     <li className={style.article}>
       <div className={style['article__left']}>
@@ -40,7 +68,8 @@ const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, f
               type="image"
               src={favorited ? heartRed : heartNull}
               alt="heart"
-              disabled
+              disabled={!token}
+              onClick={toggleLikeClick}
             ></input>
             <span className={style['article__heart-count']}>{favoritesCount}</span>
           </div>
@@ -57,6 +86,4 @@ const ArticleItem = ({ title, description, tagList, createdAt, favoritesCount, f
       </div>
     </li>
   );
-};
-
-export default ArticleItem;
+}

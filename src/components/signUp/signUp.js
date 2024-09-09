@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
 import { appSelectors } from '../../redux';
-import { fetchUserSignUp } from '../../redux/userSlice';
+import { fetchUserSignUp } from '../../api/api_user';
 
 import style from './signUp.module.scss';
 
-const SignUp = () => {
+export default function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -188,6 +188,4 @@ const SignUp = () => {
       </span>
     </div>
   );
-};
-
-export default SignUp;
+}

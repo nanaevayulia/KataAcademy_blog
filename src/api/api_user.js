@@ -14,23 +14,21 @@ export const fetchUserSignUp = createAsyncThunk('user/fetchUserSignUp', async (d
       },
       body: data,
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     userObj = await response.json();
 
-    if (userObj.user) {
-      localStorage.setItem('username', userObj.user?.username);
-      localStorage.setItem('email', userObj.user?.email);
+    if (response.ok) {
+      const { username, email, token } = userObj.user;
+      localStorage.setItem('username', username);
+      localStorage.setItem('email', email);
       localStorage.setItem('image', '');
-      localStorage.setItem('token', userObj.user?.token);
+      localStorage.setItem('token', token);
+      return userObj.user;
+    } else {
+      return rejectWithValue(userObj.errors);
     }
   } catch (err) {
-    return rejectWithValue(err.errors);
+    return rejectWithValue(err.message);
   }
-  return userObj.user ?? userObj.errors;
 });
 
 export const fetchUserSignIn = createAsyncThunk('user/fetchUserSignIn', async (data, { rejectWithValue }) => {
@@ -43,14 +41,9 @@ export const fetchUserSignIn = createAsyncThunk('user/fetchUserSignIn', async (d
       },
       body: data,
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     userObj = await response.json();
 
-    if (userObj.user) {
+    if (response.ok) {
       const { username, email, image, token } = userObj.user;
       localStorage.setItem('username', username);
       localStorage.setItem('token', token);
@@ -60,11 +53,13 @@ export const fetchUserSignIn = createAsyncThunk('user/fetchUserSignIn', async (d
       } else {
         localStorage.setItem('image', image);
       }
+      return userObj.user;
+    } else {
+      return rejectWithValue(userObj.errors);
     }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-  return userObj.user;
 });
 
 export const fetchUserEdit = createAsyncThunk('user/fetchUserEdit', async (data, { rejectWithValue }) => {
@@ -80,23 +75,21 @@ export const fetchUserEdit = createAsyncThunk('user/fetchUserEdit', async (data,
       },
       body: data,
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     userObj = await response.json();
-    if (userObj) {
+
+    if (response.ok) {
       const { username, email, image, token } = userObj.user;
       localStorage.setItem('username', username);
       localStorage.setItem('email', email);
       localStorage.setItem('image', image);
       localStorage.setItem('token', token);
+      return userObj.user;
+    } else {
+      return rejectWithValue(userObj.errors);
     }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-  return userObj.user;
 });
 
 export const fetchUserLogOut = createAsyncThunk('user/fetchUserLogOut', async (data) => data);

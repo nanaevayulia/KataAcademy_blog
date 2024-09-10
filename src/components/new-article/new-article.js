@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { appSelectors } from '../../redux';
 import { fetchCreateArticle, fetchEditArticle } from '../../api/api_articles';
@@ -28,9 +28,21 @@ export default function NewArticle({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     mode: 'all',
   });
+
+  useEffect(() => {
+    if (pageName === 'Edit article') {
+      setTagsArr(tagList);
+      let defaultValues = {};
+      defaultValues.title = title;
+      defaultValues.description = description;
+      defaultValues.body = body;
+      reset({ ...defaultValues });
+    }
+  }, [tagList]);
 
   const onSubmit = (values) => {
     const formData = {
@@ -105,7 +117,6 @@ export default function NewArticle({
           name="title"
           id="title"
           placeholder="Title"
-          defaultValue={title}
           {...register('title', {
             required: 'Required field',
             maxLength: {
@@ -131,7 +142,6 @@ export default function NewArticle({
           name="description"
           id="description"
           placeholder="Title"
-          defaultValue={description}
           {...register('description', {
             required: 'Required field',
           })}
@@ -153,7 +163,6 @@ export default function NewArticle({
           id="text"
           rows="6"
           placeholder="Text"
-          defaultValue={body}
           {...register('body', {
             required: 'Required field',
           })}

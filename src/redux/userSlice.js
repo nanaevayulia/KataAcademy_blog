@@ -10,13 +10,13 @@ const userSlice = createSlice({
     email: null,
     image: '',
     loading: false,
-    error: false,
+    error: null,
   },
 
   extraReducers: (builder) => {
     builder.addCase(fetchUserSignUp.pending, (state) => {
       state.loading = true;
-      state.error = false;
+      state.error = null;
     });
 
     builder.addCase(fetchUserSignUp.fulfilled, (state, action) => {
@@ -26,14 +26,17 @@ const userSlice = createSlice({
         state.token = action.payload.token;
         state.email = action.payload.email;
         state.username = action.payload.username;
-      } else {
-        state.errors = { ...action.payload };
       }
     });
 
-    builder.addCase(fetchUserSignUp.rejected, (state) => {
+    builder.addCase(fetchUserSignUp.rejected, (state, action) => {
       state.loading = false;
-      state.error = true;
+      state.error = action.payload;
+    });
+
+    builder.addCase(fetchUserSignIn.pending, (state) => {
+      state.loading = true;
+      state.error = null;
     });
 
     builder.addCase(fetchUserSignIn.fulfilled, (state, action) => {
@@ -46,9 +49,9 @@ const userSlice = createSlice({
       state.image = image;
     });
 
-    builder.addCase(fetchUserSignIn.rejected, (state) => {
+    builder.addCase(fetchUserSignIn.rejected, (state, action) => {
       state.loading = false;
-      state.error = true;
+      state.error = action.payload;
     });
 
     builder.addCase(fetchUserLogOut.fulfilled, (state) => {
@@ -59,6 +62,11 @@ const userSlice = createSlice({
       state.image = '';
     });
 
+    builder.addCase(fetchUserEdit.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+
     builder.addCase(fetchUserEdit.fulfilled, (state, action) => {
       state.loading = false;
 
@@ -67,6 +75,11 @@ const userSlice = createSlice({
       state.email = email;
       state.username = username;
       state.image = image;
+    });
+
+    builder.addCase(fetchUserEdit.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });

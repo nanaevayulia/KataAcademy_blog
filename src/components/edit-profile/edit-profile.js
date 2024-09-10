@@ -1,15 +1,15 @@
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
+import { appSelectors } from '../../redux';
 import { fetchUserEdit } from '../../api/api_user';
 
 import style from './edit-profile.module.scss';
 
 export default function EditProfile() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const userErrors = useSelector(appSelectors.userErrors);
 
   const {
     register,
@@ -41,7 +41,6 @@ export default function EditProfile() {
     const userData = JSON.stringify(formData);
 
     dispatch(fetchUserEdit(userData));
-    navigate('/');
   };
 
   return (
@@ -68,14 +67,11 @@ export default function EditProfile() {
               message: 'Maximum 20 characters',
             },
           })}
-          style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
+          style={errors?.username || userErrors?.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.username && (
-          <div className={style['error_message']}>
-            <p>{errors.username.message}</p>
-          </div>
-        )}
+        {errors.username && <div className={style['error_message']}>{errors.username.message}</div>}
+        {userErrors?.username && <div className={style['error_message']}>This username {userErrors.username}</div>}
 
         <label className={style['label__input']} htmlFor="email">
           Email address
@@ -93,14 +89,11 @@ export default function EditProfile() {
               message: 'Invalid email. Only lowercase letters, numbers and symbols . _ -',
             },
           })}
-          style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
+          style={errors?.email || userErrors?.email ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.email && (
-          <div className={style['error_message']}>
-            <p>{errors.email.message}</p>
-          </div>
-        )}
+        {errors?.email && <div className={style['error_message']}>{errors.email.message}</div>}
+        {userErrors?.email && <div className={style['error_message']}>This email {userErrors.email}</div>}
 
         <label className={style['label__input']} htmlFor="new-password">
           New password
@@ -125,11 +118,7 @@ export default function EditProfile() {
           style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.password && (
-          <div className={style['error_message']}>
-            <p>{errors.password.message}</p>
-          </div>
-        )}
+        {errors.password && <div className={style['error_message']}>{errors.password.message}</div>}
 
         <label className={style['label__input']} htmlFor="avatar">
           Avatar image (url)
@@ -149,11 +138,7 @@ export default function EditProfile() {
           style={errors.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.avatar && (
-          <div className={style['error_message']}>
-            <p>{errors.avatar.message}</p>
-          </div>
-        )}
+        {errors.avatar && <div className={style['error_message']}>{errors.avatar.message}</div>}
 
         <button className={style['btn__submit']} type="submit">
           Save

@@ -15,13 +15,16 @@ export const fetchArticles = createAsyncThunk('articles/fetchArticles', async (p
         Authorization: `Token ${token}`,
       },
     });
-
     articlesObj = await response.json();
+
+    if (response.ok) {
+      return articlesObj;
+    } else {
+      return rejectWithValue(articlesObj.errors);
+    }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-
-  return articlesObj;
 });
 
 export const fetchArticle = createAsyncThunk('articles/fetchArticle', async (slug, { rejectWithValue }) => {
@@ -34,16 +37,16 @@ export const fetchArticle = createAsyncThunk('articles/fetchArticle', async (slu
         Authorization: `Token ${token}`,
       },
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     articleObj = await response.json();
+
+    if (response.ok) {
+      return articleObj.article;
+    } else {
+      return rejectWithValue(articleObj.errors);
+    }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-  return articleObj.article;
 });
 
 export const fetchCreateArticle = createAsyncThunk('articles/fetchCreateArticle', async (data, { rejectWithValue }) => {
@@ -59,16 +62,16 @@ export const fetchCreateArticle = createAsyncThunk('articles/fetchCreateArticle'
       },
       body: data,
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     articleObj = await response.json();
+
+    if (response.ok) {
+      return articleObj.article;
+    } else {
+      return rejectWithValue(articleObj.errors);
+    }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-  return articleObj.article;
 });
 
 export const fetchEditArticle = createAsyncThunk(
@@ -86,16 +89,16 @@ export const fetchEditArticle = createAsyncThunk(
         },
         body: data,
       });
-
-      if (!response.ok) {
-        throw new Error(`Could not fetch ${url}, received ${response.status}`);
-      }
-
       articleObj = await response.json();
+
+      if (response.ok) {
+        return articleObj.article;
+      } else {
+        return rejectWithValue(articleObj.errors);
+      }
     } catch (err) {
       return rejectWithValue(err.message);
     }
-    return articleObj.article;
   }
 );
 
@@ -109,16 +112,16 @@ export const fetchSetLike = createAsyncThunk('articles/fetchSetLike', async (slu
         Authorization: `Token ${token}`,
       },
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     articleObj = await response.json();
+
+    if (response.ok) {
+      return articleObj.article;
+    } else {
+      return rejectWithValue(articleObj.errors);
+    }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-  return articleObj.article;
 });
 
 export const fetchDeleteLike = createAsyncThunk('articles/fetchDeleteLike', async (slug, { rejectWithValue }) => {
@@ -132,14 +135,14 @@ export const fetchDeleteLike = createAsyncThunk('articles/fetchDeleteLike', asyn
         Authorization: `Token ${token}`,
       },
     });
-
-    if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received ${response.status}`);
-    }
-
     articleObj = await response.json();
+
+    if (response.ok) {
+      return articleObj.article;
+    } else {
+      return rejectWithValue(articleObj.errors);
+    }
   } catch (err) {
     return rejectWithValue(err.message);
   }
-  return articleObj.article;
 });

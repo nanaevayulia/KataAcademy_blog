@@ -7,7 +7,7 @@ import { appSelectors } from '../../redux';
 import { fetchArticle } from '../../api/api_articles';
 
 export default function EditArticle() {
-  const { slug } = useParams;
+  const { slug } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 
@@ -9,14 +9,9 @@ import style from './signIn.module.scss';
 
 export default function SignIn() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { token, loading, error, username } = useSelector(appSelectors.userObj);
 
-  const fromPage = location.state?.from?.pathname || '/';
-  if (username) {
-    navigate(fromPage, { replace: true });
-  }
+  const { token, loading } = useSelector(appSelectors.userObj);
+  const userErrors = useSelector(appSelectors.userErrors);
 
   const {
     register,
@@ -41,8 +36,11 @@ export default function SignIn() {
     if (token) {
       reset();
     }
-    navigate('/');
   };
+
+  if (token) {
+    return <Navigate replace to="/" />;
+  }
 
   return (
     <div className={style.signIn}>
@@ -64,14 +62,10 @@ export default function SignIn() {
               message: 'Invalid email. Only lowercase letters, numbers and symbols . _ -',
             },
           })}
-          style={errors.email || error ? { borderColor: 'rgba(245, 34, 45)' } : null}
+          style={errors.email || userErrors ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.email && (
-          <div className={style['error_message']}>
-            <p> {errors?.email?.message}</p>
-          </div>
-        )}
+        {errors.email && <div className={style['error_message']}>{errors?.email?.message}</div>}
 
         <label className={style['label__input']} htmlFor="password">
           Password
@@ -85,13 +79,13 @@ export default function SignIn() {
           {...register('password', {
             required: 'Required field',
           })}
-          style={errors.password || error ? { borderColor: 'rgba(245, 34, 45)' } : null}
+          style={errors.password || userErrors ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.password && (
-          <div className={style['error_message']}>
-            <p> {errors?.password?.message}</p>
-          </div>
+        {errors.password && <div className={style['error_message']}>{errors?.password?.message}</div>}
+
+        {userErrors && (
+          <div className={style['error_message']}>Email or password {userErrors['email or password']}</div>
         )}
 
         <button className={style['btn__submit']} disabled={loading}>

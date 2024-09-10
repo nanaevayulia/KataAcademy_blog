@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -10,7 +10,6 @@ import style from './signUp.module.scss';
 
 export default function SignUp() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [password, setPassword] = useState(null);
 
@@ -40,8 +39,11 @@ export default function SignUp() {
     if (token) {
       reset();
     }
-    navigate('/');
   };
+
+  if (token) {
+    return <Navigate replace to="/" />;
+  }
 
   return (
     <div className={style.signUp}>
@@ -67,14 +69,13 @@ export default function SignUp() {
               message: 'Maximum 20 characters',
             },
           })}
-          style={(errors.username ?? userErrors) ? { borderColor: 'rgba(245, 34, 45)' } : null}
+          style={errors?.username || userErrors?.username ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {(errors.username ?? userErrors?.username) ? (
-          <div className={style['error_message']}>
-            <p> {errors?.username?.message ?? userErrors.username}</p>
-          </div>
-        ) : null}
+        {errors?.username && <div className={style['error_message']}>{errors?.username?.message}</div>}
+        {userErrors?.username && (
+          <div className={style['error_message']}>User with this name {userErrors.username}</div>
+        )}
 
         <label className={style['label__input']} htmlFor="email">
           Email address
@@ -92,14 +93,11 @@ export default function SignUp() {
               message: 'Invalid email. Only lowercase letters, numbers and symbols . _ -',
             },
           })}
-          style={errors.email ? { borderColor: 'rgba(245, 34, 45)' } : null}
+          style={errors?.email || userErrors?.email ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {(errors.email ?? userErrors?.email) ? (
-          <div className={style['error_message']}>
-            <p> {errors?.email?.message ?? userErrors?.email}</p>
-          </div>
-        ) : null}
+        {errors?.email && <div className={style['error_message']}>{errors?.email?.message}</div>}
+        {userErrors?.email && <div className={style['error_message']}>This email {userErrors.email}</div>}
 
         <label className={style['label__input']} htmlFor="password">
           Password
@@ -125,11 +123,7 @@ export default function SignUp() {
           style={errors.password ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.password ? (
-          <div className={style['error_message']}>
-            <p> {errors?.password?.message}</p>
-          </div>
-        ) : null}
+        {errors.password && <div className={style['error_message']}>{errors?.password?.message}</div>}
 
         <label className={style['label__input']} htmlFor="repeat-password">
           Repeat Password
@@ -147,11 +141,7 @@ export default function SignUp() {
           style={errors.confirm ? { borderColor: 'rgba(245, 34, 45)' } : null}
         />
 
-        {errors.confirm ? (
-          <div className={style['error_message']}>
-            <p> {errors?.confirm?.message}</p>
-          </div>
-        ) : null}
+        {errors.confirm && <div className={style['error_message']}>{errors?.confirm?.message}</div>}
 
         <div className={style['checkbox__container']}>
           <input
@@ -168,11 +158,7 @@ export default function SignUp() {
             I agree to the processing of my personal information
           </label>
 
-          {errors.checkbox ? (
-            <div className={style['error_message_checkbox']}>
-              <p> {errors?.checkbox?.message}</p>
-            </div>
-          ) : null}
+          {errors.checkbox && <div className={style['error_message_checkbox']}>{errors?.checkbox?.message}</div>}
         </div>
 
         <button className={style['btn__submit']} disabled={loading}>

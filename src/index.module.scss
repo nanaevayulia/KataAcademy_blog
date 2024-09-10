@@ -45,3 +45,23 @@ a {
 textarea {
   font: inherit;
 }
+
+:global(.ant-pagination .ant-pagination-item) {
+  background-color: transparent;
+}
+
+:global(.ant-pagination .ant-pagination-item-active) {
+  background-color: $blue-color;
+  border: none;   
+  
+}
+
+:global(.ant-pagination .ant-pagination-item-active a) { 
+  color: $white-color;
+}
+
+:global(.ant-tag) {
+  background-color: transparent;
+  border-color: $text-color-secondary;
+  color: $text-color;
+}

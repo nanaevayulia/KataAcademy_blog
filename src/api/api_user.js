@@ -93,3 +93,5 @@ export const fetchUserEdit = createAsyncThunk('user/fetchUserEdit', async (data,
 });
 
 export const fetchUserLogOut = createAsyncThunk('user/fetchUserLogOut', async (data) => data);
+
+export const fetchUserResetErrors = createAsyncThunk('user/fetchUserResetErrors', async (data) => data);

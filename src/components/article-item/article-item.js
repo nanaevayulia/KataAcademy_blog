@@ -2,11 +2,10 @@ import { Tag } from 'antd';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 
 import { fetchSetLike, fetchDeleteLike } from '../../api/api_articles';
 import getTrimText from '../../utils';
-import heartNull from '../../images/heart_null.svg';
-import heartRed from '../../images/heart_red.svg';
 import { appSelectors } from '../../redux';
 
 import style from './article-item.module.scss';
@@ -36,6 +35,14 @@ export default function ArticleItem({
     userAvatar = image;
   }
 
+  const [like, setLike] = useState(favorited);
+  const [likeCounts, setLikeCounts] = useState(favoritesCount);
+
+  useEffect(() => {
+    setLike(favorited);
+    setLikeCounts(favoritesCount);
+  }, [favorited]);
+
   const filterTags = tagList && tagList.map((item) => getTrimText(item)).filter((item) => item || Math.abs(0));
   const tags = filterTags && (
     <div className={style['article__tags']}>
@@ -45,11 +52,22 @@ export default function ArticleItem({
     </div>
   );
 
+  let likeButtonClass = 'article__heart_';
+  if (like) {
+    likeButtonClass += 'red';
+  } else {
+    likeButtonClass += 'null';
+  }
+
   const toggleLikeClick = () => {
     if (token) {
-      if (!favorited) {
+      if (!like) {
+        setLike(true);
+        setLikeCounts((likeCounts) => likeCounts + 1);
         dispatch(fetchSetLike(slug));
       } else {
+        setLike(false);
+        setLikeCounts((likeCounts) => likeCounts - 1);
         dispatch(fetchDeleteLike(slug));
       }
     }
@@ -63,15 +81,8 @@ export default function ArticleItem({
             {getTrimText(title, 50) || 'No title'}
           </Link>
           <div className={style['article__like']}>
-            <input
-              className={style['article__heart']}
-              type="image"
-              src={favorited ? heartRed : heartNull}
-              alt="heart"
-              disabled={!token}
-              onClick={toggleLikeClick}
-            ></input>
-            <span className={style['article__heart-count']}>{favoritesCount}</span>
+            <button className={style[likeButtonClass]} disabled={!token} onClick={toggleLikeClick}></button>
+            <span className={style['article__heart-count']}>{likeCounts}</span>
           </div>
         </div>
         {tags}

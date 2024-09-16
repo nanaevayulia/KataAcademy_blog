@@ -44,9 +44,16 @@
         gap: 3px;
     }
 
-    &__heart {
+    &__heart_null {
         width: 16px;
         height: 16px;
+        background: url('../../images/heart_null.svg') no-repeat 50% 50%;
+    }
+
+    &__heart_red {
+        width: 16px;
+        height: 16px;
+        background: url('../../images/heart_red.svg') no-repeat 50% 50%;
     }
 
     &__tags {

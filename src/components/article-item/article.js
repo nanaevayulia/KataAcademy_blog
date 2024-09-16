@@ -1,15 +1,13 @@
 import { Tag, Spin, Alert, Popconfirm } from 'antd';
 import { format } from 'date-fns';
 import Markdown from 'markdown-to-jsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 
 import { appSelectors } from '../../redux';
 import { fetchSetLike, fetchDeleteLike, fetchArticle } from '../../api/api_articles';
 import getTrimText from '../../utils';
-import heartNull from '../../images/heart_null.svg';
-import heartRed from '../../images/heart_red.svg';
 import NotFound from '../not-found';
 
 import style from './article-item.module.scss';
@@ -49,6 +47,14 @@ export default function Article() {
   const favorited = article?.favorited;
   const username = author?.username;
 
+  const [like, setLike] = useState(favorited);
+  const [likeCounts, setLikeCounts] = useState(favoritesCount);
+
+  useEffect(() => {
+    setLike(favorited);
+    setLikeCounts(favoritesCount);
+  }, [favorited]);
+
   let userAvatar = '';
   if (author?.image === undefined) {
     userAvatar = 'https://static.productionready.io/images/smiley-cyrus.jpg';
@@ -85,11 +91,22 @@ export default function Article() {
     navigate(fromPage, { replace: true });
   };
 
+  let likeButtonClass = 'article__heart_';
+  if (like) {
+    likeButtonClass += 'red';
+  } else {
+    likeButtonClass += 'null';
+  }
+
   const toggleLikeClick = () => {
     if (token) {
-      if (!favorited) {
+      if (!like) {
+        setLike(true);
+        setLikeCounts((likeCounts) => likeCounts + 1);
         dispatch(fetchSetLike(slug));
       } else {
+        setLike(false);
+        setLikeCounts((likeCounts) => likeCounts - 1);
         dispatch(fetchDeleteLike(slug));
       }
     }
@@ -112,15 +129,8 @@ export default function Article() {
             <div>
               <span className={style['article__title']}>{deleteSpaces(title) || 'No title'}</span>
               <div className={style['article__like']}>
-                <input
-                  className={style['article__heart']}
-                  type="image"
-                  src={favorited ? heartRed : heartNull}
-                  alt="heart"
-                  disabled={!token}
-                  onClick={toggleLikeClick}
-                ></input>
-                <span className={style['article__heart-count']}>{favoritesCount}</span>
+                <button className={style[likeButtonClass]} disabled={!token} onClick={toggleLikeClick}></button>
+                <span className={style['article__heart-count']}>{likeCounts}</span>
               </div>
             </div>
             {tags}

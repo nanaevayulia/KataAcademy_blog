@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { fetchUserSignIn, fetchUserSignUp, fetchUserLogOut, fetchUserEdit } from '../api/api_user';
+import {
+  fetchUserSignIn,
+  fetchUserSignUp,
+  fetchUserLogOut,
+  fetchUserEdit,
+  fetchUserResetErrors,
+} from '../api/api_user';
 
 const userSlice = createSlice({
   name: 'user',
@@ -80,6 +86,10 @@ const userSlice = createSlice({
     builder.addCase(fetchUserEdit.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    });
+
+    builder.addCase(fetchUserResetErrors.fulfilled, (state) => {
+      state.error = null;
     });
   },
 });

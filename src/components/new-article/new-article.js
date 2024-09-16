@@ -22,6 +22,8 @@ export default function NewArticle({
   const { loading } = useSelector(appSelectors.loading);
 
   const [tagsArr, setTagsArr] = useState(tagList);
+  const [tagInput, setTagInput] = useState('');
+
   const ref = useRef(null);
 
   const {
@@ -50,7 +52,7 @@ export default function NewArticle({
         title: values.title.trim(),
         description: values.description.trim(),
         body: values.body.trim(),
-        tagList: tagsArr,
+        tagList: tagInput ? [...tagsArr, tagInput] : [...tagsArr],
       },
     };
 
@@ -63,25 +65,27 @@ export default function NewArticle({
     }
   };
 
-  const deleteTag = (tag) => {
-    const newArray = tagsArr.filter((item) => item !== tag);
-    setTagsArr(newArray);
-  };
-
   const addTag = (e) => {
     e.preventDefault();
     if (!tagsArr?.includes(ref.current.value) && ref.current.value.length) {
+      setTagInput('');
       const newArr = [...tagsArr, ref.current.value];
       ref.current.value = '';
       setTagsArr(newArr);
     }
   };
 
+  const deleteTag = (e, tag) => {
+    e.preventDefault();
+    const newArray = tagsArr.filter((item) => item !== tag);
+    setTagsArr(newArray);
+  };
+
   const changeTagsArr = (e, tag) => {
     const newItem = e.target.value;
     const newArr = tagsArr.map((item) => {
       if (item === tag) {
-        item === newItem;
+        item = newItem;
       }
       return item;
     });
@@ -96,9 +100,10 @@ export default function NewArticle({
         type="text"
         name="tag"
         placeholder="Tag"
+        readOnly="readonly"
         onChange={(e) => changeTagsArr(e, tag)}
       />
-      <button data-tag={tag} className={style['btn__delete']} onClick={() => deleteTag(tag)}>
+      <button data-tag={tag} className={style['btn__delete']} onClick={(e) => deleteTag(e, tag)}>
         Delete
       </button>
     </div>
@@ -141,7 +146,7 @@ export default function NewArticle({
           type="text"
           name="description"
           id="description"
-          placeholder="Title"
+          placeholder="Short description"
           {...register('description', {
             required: 'Required field',
           })}
@@ -179,7 +184,15 @@ export default function NewArticle({
           Tags
           {tags}
           <div className={style['form__wrapper']}>
-            <input ref={ref} className={style.input} type="text" name="tag" id="tag" placeholder="Tag" />
+            <input
+              ref={ref}
+              className={style.input}
+              type="text"
+              name="tag"
+              id="tag"
+              placeholder="Tag"
+              onChange={(e) => setTagInput(e.target.value)}
+            />
             <button className={style['btn__delete']} disabled={loading} onClick={(e) => deleteTag(e)}>
               Delete
             </button>

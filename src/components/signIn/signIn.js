@@ -1,14 +1,19 @@
 import { Link, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 import { appSelectors } from '../../redux';
-import { fetchUserSignIn } from '../../api/api_user';
+import { fetchUserSignIn, fetchUserResetErrors } from '../../api/api_user';
 
 import style from './signIn.module.scss';
 
 export default function SignIn() {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserResetErrors());
+  }, []);
 
   const { token, loading } = useSelector(appSelectors.userObj);
   const userErrors = useSelector(appSelectors.userErrors);

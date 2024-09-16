@@ -3,12 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 import { appSelectors } from '../../redux';
-import { fetchUserEdit } from '../../api/api_user';
+import { fetchUserEdit, fetchUserResetErrors } from '../../api/api_user';
 
 import style from './edit-profile.module.scss';
 
 export default function EditProfile() {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserResetErrors());
+  }, []);
+
   const userErrors = useSelector(appSelectors.userErrors);
 
   const {

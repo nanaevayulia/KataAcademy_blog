@@ -1,13 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import {
-  fetchArticles,
-  fetchArticle,
-  fetchCreateArticle,
-  fetchEditArticle,
-  fetchSetLike,
-  fetchDeleteLike,
-} from '../api/api_articles';
+import { fetchArticles, fetchArticle, fetchCreateArticle, fetchEditArticle } from '../api/api_articles';
 
 const articlesSlice = createSlice({
   name: 'articles',
@@ -73,34 +66,6 @@ const articlesSlice = createSlice({
       const { slug } = action.payload;
       const index = state.articles.findIndex((article) => article.slug === slug);
       state.articles[index] = { ...action.payload };
-    });
-
-    builder.addCase(fetchSetLike.pending, (state) => {
-      state.loading = true;
-      state.error = false;
-    });
-
-    builder.addCase(fetchSetLike.fulfilled, (state, action) => {
-      state.loading = false;
-      const { slug, favorited, favoritesCount } = action.payload;
-
-      const index = state.articles.findIndex((article) => article.slug === slug);
-      state.articles[index].favorited = favorited;
-      state.articles[index].favoritesCount = favoritesCount;
-    });
-
-    builder.addCase(fetchDeleteLike.pending, (state) => {
-      state.loading = true;
-      state.error = false;
-    });
-
-    builder.addCase(fetchDeleteLike.fulfilled, (state, action) => {
-      state.loading = false;
-      const { slug, favorited, favoritesCount } = action.payload;
-
-      const index = state.articles.findIndex((article) => article.slug === slug);
-      state.articles[index].favorited = favorited;
-      state.articles[index].favoritesCount = favoritesCount;
     });
   },
 });

@@ -1,3 +1,4 @@
 Реализовать примитивную блог-платформу. В ходе выполения познакомимся с аутентификацией и валидацией форм.
 Проект реализуем целиком с использованием react hooks.<br>
-Vercel = https://blog-platform-woad.vercel.app/
+Vercel = blog-platform-pearl.vercel.app
+
